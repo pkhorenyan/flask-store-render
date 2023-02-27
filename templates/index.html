@@ -1,0 +1,167 @@
+{% include "header.html" %}
+
+<body>
+<section>
+
+    <div class="container-xxl">
+
+     <div class="hero-unit">
+       <h1>Welcome to My Store</h1>
+     </div>
+
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+              <p class="error">{{ message }}</p><br>
+            {% endfor %}
+        {% endif %}
+        {% endwith %}
+
+    <div class="container d-flex justify-content-end">
+       <div class="row row-cols-auto">
+
+         <div class="col">
+
+                   <div class="dropdown">
+                {% if sort %}
+                  <button class="btn btn-outline-dark dropdown-toggle" type="button" id="dropdownMenu3" data-bs-toggle="dropdown" aria-expanded="false">
+                      {{sort}}
+                  </button>
+               {% else %}
+                   <button class="btn btn-outline-dark dropdown-toggle" type="button" id="dropdownMenu3" data-bs-toggle="dropdown" aria-expanded="false">
+                    Sort by
+                  </button>
+                {% endif %}
+
+                  <ul class="dropdown-menu" aria-labelledby="dropdownMenu3">
+
+                  <li><form action="{{ url_for('home', sort='Price: Low to High', per_page=per_page, page=1) }}" method="POST"><button class="dropdown-item" type="submit">Price: Low to High</button></form></li>
+                  <li><form action="{{ url_for('home', sort='Price: High to Low', per_page=per_page, page=1) }}" method="POST"><button class="dropdown-item" type="submit">Price: High to Low</button></form></li>
+                  <li><form action="{{ url_for('home', sort='Newest Arrivals', per_page=per_page, page=1) }}" method="POST"><button class="dropdown-item" type="submit">Newest Arrivals</button></form></li>
+                  <li><form action="{{ url_for('home', sort='Out of Stock', per_page=per_page, page=1) }}" method="POST"><button class="dropdown-item" type="submit">Out of Stock</button></form></li>
+                  </ul>
+                </div><br>
+         </div>
+
+         <div class="col">
+
+                <div class="dropdown">
+                  <button class="btn btn-outline-dark dropdown-toggle" type="button" id="dropdownMenu2" data-bs-toggle="dropdown" aria-expanded="false">
+                    Show items per page
+                  </button>
+
+                  <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
+
+                  <li><form action="{{ url_for('home', per_page=2, page=1, sort=sort) }}" method="POST"><button class="dropdown-item" type="submit">2</button></form></li>
+                  <li><form action="{{ url_for('home', per_page=4, page=1, sort=sort) }}" method="POST"><button class="dropdown-item" type="submit">4</button></form></li>
+                  <li><form action="{{ url_for('home', per_page=8, page=1, sort=sort) }}" method="POST"><button class="dropdown-item" type="submit">8</button></form></li>
+                  <li><form action="{{ url_for('home', per_page=1000, sort=sort) }}" method="POST"><button class="dropdown-item" type="submit">All</button></form></li>
+
+                  </ul>
+                </div><br>
+         </div>
+
+       </div>
+    </div>
+
+      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4">
+
+        {% for product in products.items %}
+
+          {% if product.stock<1 %}
+        <div class="col opacity-50">
+          <div class="card" >
+              <h2 style="color: red;" align="center">OUT OF STOCK</h2>
+            <a href="{{ url_for('show_product', id=product.id) }}" class="link-dark link"><img src="{{ product.img }}" class="card-img-top" alt="...">
+            <div class="card-body">
+              <h5 class="card-title">{{ product.name }}</h5>
+              <p class="card-text">{{ product.description[:100] }}...</p>
+            </div>
+              </a>
+          </div>
+          <ul class="list-group list-group-flush">
+            <h5><li class="list-group-item"><strong>Price:</strong> {{ product.price }}$</li></h5>
+          </ul>
+          <div class="card-foorter">
+
+                <form action="{{ url_for('add_to_cart') }}" method="POST">
+                <a href="{{ url_for('show_product', id=product.id) }}" class="btn btn-outline-dark">Details</a>
+                <input type="hidden" name="product_id" value="{{product.id}}">
+                <button type="submit" class="btn btn-dark" disabled>Add to Cart</button>
+                <input type="hidden" name="quantity" value="1">
+                  {% if current_user.id == 1 %}
+                    <a href="{{ url_for('remove_product', id=product.id) }}" class="btn btn-danger">Remove</a>
+                  {% endif %}
+                </form>
+
+          </div>
+        </div>
+
+          {% else %}
+
+        <div class="col">
+          <div class="card">
+            <a href="{{ url_for('show_product', id=product.id) }}" class="link-dark link"><img src="{{ product.img }}" class="card-img-top" alt="...">
+            <div class="card-body">
+              <h5 class="card-title">{{ product.name }}</h5>
+              <p class="card-text">{{ product.description[:100] }}...</p>
+            </div>
+              </a>
+          </div>
+          <ul class="list-group list-group-flush">
+            <h5><li class="list-group-item"><strong>Price:</strong> {{ product.price }}$</li></h5>
+          </ul>
+          <div class="card-foorter">
+
+                <form action="{{ url_for('add_to_cart') }}" method="POST">
+                <a href="{{ url_for('show_product', id=product.id) }}" class="btn btn-outline-dark">Details</a>
+                <input type="hidden" name="product_id" value="{{product.id}}">
+                <button type="submit" class="btn btn-dark">Add to Cart</button>
+                <input type="hidden" name="quantity" value="1">
+                  {% if current_user.id == 1 %}
+                    <a href="{{ url_for('remove_product', id=product.id) }}" class="btn btn-danger">Remove</a>
+                  {% endif %}
+                </form>
+
+          </div>
+        </div>
+        {% endif %}
+
+        {% endfor %}
+
+       </div>
+
+    <br>
+
+    <div class="container-xxl">
+    <div class="container" align="center">
+
+    {% if per_page<1000 %}
+    {% if products.has_prev %}
+          <a href="{{url_for('home', page=products.prev_num)}}" class="btn btn-outline-dark"><</a>
+    {% endif %}
+
+     {% for page_num in products.iter_pages(left_edge=1, right_edge=2, left_current=1, right_current=2) %}
+      {% if page_num %}
+        {% if products.page == page_num %}
+          <a href="{{url_for('home', page=page_num, per_page=per_page, sort=sort)}}" class="btn btn-dark">{{page_num}}</a>
+        {% else %}
+          <a href="{{url_for('home', page=page_num, per_page=per_page, sort=sort)}}" class="btn btn-outline-dark-info">{{page_num}}</a>
+        {% endif %}
+      {% else %}
+        ...
+      {% endif %}
+     {% endfor %}
+
+    {% if products.has_next %}
+          <a href="{{url_for('home', page=products.next_num)}}" class="btn btn-outline-dark">></a>
+    {% endif %}
+    {% endif %}
+
+    </div>
+    <div>
+
+{% include "footer.html" %}
+
+</section>
+</body>

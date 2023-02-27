@@ -1,0 +1,69 @@
+{% include "header.html" %}
+
+<body>
+
+<section>
+
+    <div class="container-xxl">
+
+     <div class="hero-unit">
+       <h1>Welcome to Computer Store</h1>
+     </div>
+
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+              <p class="error">{{ message }}</p><br>
+            {% endfor %}
+        {% endif %}
+        {% endwith %}
+
+        <h3>You searched for: "<i>{{keyword}}</i>"</h3><br>
+
+      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4">
+
+        {% for product in products %}
+
+        <div class="col">
+          <div class="card">
+            <a href="{{ url_for('show_product', id=product.id) }}" class="link-dark link"><img src="{{ product.img }}" class="card-img-top" alt="...">
+            <div class="card-body">
+              <h5 class="card-title">{{ product.name }}</h5>
+              <p class="card-text">{{ product.description[:100] }}...</p>
+            </div>
+              </a>
+          </div>
+          <ul class="list-group list-group-flush">
+            <h5><li class="list-group-item"><strong>Price:</strong> {{ product.price }}$</li></h5>
+          </ul>
+          <div class="card-foorter">
+
+                <form action="{{ url_for('add_to_cart') }}" method="POST">
+                <a href="{{ url_for('show_product', id=product.id) }}" class="btn btn-outline-dark">Details</a>
+                <input type="hidden" name="product_id" value="{{product.id}}">
+                <button type="submit" class="btn btn-dark">Add to Cart</button>
+                <input type="hidden" name="quantity" value="1">
+                  {% if current_user.id == 1 %}
+                    <a href="{{ url_for('remove_product', id=product.id) }}" class="btn btn-danger">Remove</a>
+                  {% endif %}
+                </form>
+
+          </div>
+        </div>
+        {% endfor %}
+
+  </div>
+
+    <br>
+
+    <div class="container-xxl">
+    <div class="container" align="center">
+
+    </div>
+    <div>
+
+{% include "footer.html" %}
+</section>
+
+
+</body>

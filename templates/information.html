@@ -1,0 +1,47 @@
+{% include "header.html" %}
+
+
+<body>
+
+<section>
+
+    <div class="container-xxl">
+     <div class="container">
+
+
+	<h3>Your information:</h3><br>
+    <form action="{{ url_for('checkout') }}" method="post">
+    {% if current_user.is_authenticated %}
+        Name:<br>
+    	<input type="text" name="name" value="{{current_user.name}}" required="required" size="60"/><br><br>
+    {% else %}
+        Name:<br>
+    	<input type="text" name="name" placeholder="Name" required="required" size="60"/><br><br>
+    {% endif %}
+        City:<br>
+        <input type="text" name="city" placeholder="City" required="required" size="60"/><br><br>
+        Address:<br>
+		<input type="text" name="address" placeholder="Address" required="required" size="60"/><br><br>
+        Zip code:<br>
+        <input type="text" name="zipcode" placeholder="12345" required="required" size="60"/><br><br>
+    {% if current_user.is_authenticated %}
+        Email:<br>
+    	<input type="text" name="email" value="{{current_user.email}}" required="required" readonly size="60"/><br><br>
+    {% else %}
+        Email:<br>
+        <input type="email" name="email" placeholder="Email" required="required" size="60"/><br><br>
+    {% endif %}
+
+
+        <button type="submit" class="btn btn-primary btn-block btn-large btn-dark">Submit</button>
+    </form>
+
+
+      {% include "footer.html" %}
+     </div>
+    </div>
+
+</section>
+
+
+</body>

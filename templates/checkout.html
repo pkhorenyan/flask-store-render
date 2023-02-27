@@ -1,0 +1,83 @@
+{% include "header.html" %}
+
+<body>
+<section>
+
+  <div class="container-xxl">
+     <div class="container">
+         <h5>Please do not refresh page</h5><br>
+
+        <table class="table table-striped align-middle">
+          <thead>
+            <tr>
+              <th scope="col"></th>
+                <th scope="col"></th>
+              <th scope="col">Product</th>
+              <th scope="col">Quantity</th>
+              <th scope="col">Price</th>
+            </tr>
+          </thead>
+          <tbody>
+
+          {% for key, product in session['ShoppingCart'].items() %}
+            <tr>
+            <th scope="row">{{loop.index}}</th>
+            <td><img src="{{ product.img }}" width="100"></td>
+            <td>{{product.name}}</td>
+            <td>{{product.quantity}}</td>
+            <td>{{product.product_price}}$</td>
+            </tr>
+          {% endfor %}
+
+            <tr>
+                <td colspan="7" ><br><h5><strong>Total: </strong>{{grandtotal}}$</h5></td>
+            </tr>
+
+          </tbody>
+        </table>
+
+         <h3>Your information:</h3><br>
+         <strong>Invoice</strong>: {{ order.invoice }}<br>
+         <strong>Name:</strong> {{ order.customer['name'] }}<br>
+         <strong>City:</strong> {{ order.customer['city'] }}<br>
+         <strong>Address:</strong> {{ order.customer['address'] }}<br>
+         <strong>Zip Code:</strong> {{ order.customer['zipcode'] }}<br>
+         <strong>E-mail:</strong> {{ order.customer['email'] }}<br>
+         <hr>
+
+        {% set amount = grandtotal | replace('.','') %}
+
+        <form action="{{ url_for('create_checkout_session') }}" method="POST">
+            <button type="submit" class="btn btn-dark">Proceed to payment</button>
+            <input type="hidden" name="price" value="{{amount}}">
+            <input type="hidden" name="invoice" value="{{order.invoice}}">
+<!--            <script-->
+<!--            src="https://checkout.stripe.com/checkout.js"-->
+<!--            class="stripe-button"-->
+<!--            data-key="pk_test_51Jx7koBeInICSsGocPsV2vCNCGJsRhgxQuUDidKTp34qzvTJqcplWhZoZzFd3iAFReLa4B2QzpiXxpEpgxxLB8PW009ugYr4cX"-->
+<!--            data-name="Purchase"-->
+<!--            data-amount="{{amount}}"-->
+<!--            data-currency="usd">-->
+<!--            </script>-->
+        </form>
+
+                {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    {% for message in messages %}
+                      <p>{{ message }}</p>
+                    {% endfor %}
+                {% endif %}
+                {% endwith %}
+
+      {% include "footer.html" %}
+     </div>
+  </div>
+
+</section>
+
+<script>
+    if ( window.history.replaceState ) {
+        window.history.replaceState( null, null, window.location.href );
+    }
+</script>
+</body>

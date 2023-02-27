@@ -1,0 +1,33 @@
+
+{% include "header.html" %}
+
+
+<body>
+
+<section>
+
+    <div class="container-xxl">
+     <div class="container">
+
+{% if current_user.is_authenticated %}
+     <br>
+     <br>
+        <div class="d-flex justify-content-center">
+        <div class="spinner-border" role="status">
+        </div>&nbsp;&nbsp;&nbsp;&nbsp;<h3>Welcome <strong>{{current_user.name}}</strong>, you've successfully logged in...</h3>
+        </div>
+     <br>
+     <br>
+{% endif %}
+
+      {% include "footer.html" %}
+     </div>
+    </div>
+
+</section>
+
+
+</body>
+
+
+

@@ -1,0 +1,59 @@
+{% include "header.html" %}
+
+<body>
+
+<section>
+
+    <div class="container-xxl">
+     <div class="container">
+        <table class="table table-striped align-middle">
+          <thead>
+            <tr>
+              <th scope="col"></th>
+                <th scope="col"></th>
+              <th scope="col">Product</th>
+              <th scope="col">Quantity</th>
+                 <th scope="col"></th>
+              <th scope="col">Price</th>
+              <th scope="col"></th>
+            </tr>
+          </thead>
+          <tbody>
+
+          {% for key, product in session['ShoppingCart'].items() %}
+            <tr>
+              <th scope="row">{{loop.index}}</th>
+            <td><img src="{{ product.img }}" width="100"></td>
+            <td><a href="{{ url_for('show_product', id=key) }}" class="link-dark link">{{product.name}}</a></td>
+                <td><form action="{{ url_for('update_cart', code=key) }}" method="POST"><input type="number" name="quantity" value="{{product.quantity}}" min="1" max="{{product.stock}}" size="3"></td>
+                <td><button type="submit" class="btn">Update</button></form></td>
+              <td>{{product.product_price}}$</td>
+              <td><form action="{{ url_for('delete_item', id=key) }}" method="POST"><button type="submit" class="btn btn-outline-dark">Remove</button></form></td>
+
+            </tr>
+          {% endfor %}
+
+            <tr>
+                <td colspan="6" ><br><h5><strong>Total: </strong> {{grandtotal}}$</h5></td>
+                <td colspan="1" class="align-middle"><a href="{{ url_for('clear_cart') }}" class="link-dark link"><button type="submit" class="btn btn-outline-dark">Empty Cart</button></a></td>
+            </tr>
+
+                {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    {% for message in messages %}
+                      <p>{{ message }}</p>
+                    {% endfor %}
+                {% endif %}
+                {% endwith %}
+
+          </tbody>
+        </table>
+         <form action="{{ url_for('information') }}" method="POST"><button type="submit" class="btn btn-dark">Checkout</button></form>
+
+      {% include "footer.html" %}
+    </div>
+    </div>
+
+</section>
+
+</body>

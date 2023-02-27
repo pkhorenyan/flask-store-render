@@ -1,0 +1,55 @@
+{% include "header.html" %}
+
+<body>
+<section>
+
+    <div class="container-xxl">
+
+     <div class="hero-unit">
+       <h1>Welcome to My Store</h1>
+     </div>
+
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+              <p class="error">{{ message }}</p><br>
+            {% endfor %}
+        {% endif %}
+        {% endwith %}
+
+     <div class="container">
+       <div class="row">
+         <div class="col-sm-1 col-md-4">
+           <br><br
+             <label for="">Upload Thumbnail:</label><br><br>
+             <input form="editform" type="file" name="img" size="5" accept=".jpg, .jpeg, .png"/><br><br>
+         </div>
+         <div class="col">
+        <div class="row product-description">
+                <br>
+                <form id="editform" action="{{ url_for('add_product') }}" method="POST" enctype="multipart/form-data">
+                    <label for="">Title:</label><br>
+                    <textarea hidden></textarea>
+                    <textarea name="name" cols="80" placeholder="Product title" rows="2"></textarea><br><br>
+                    <label for="">Description:</label><br>
+                    <textarea name="description" placeholder="Product description" cols="80" rows="10"></textarea><br><br>
+                    <label for="">ID:</label>&nbsp;
+                    <input type="text" name="pid" value="{{pid}}" min="0"><br><br>
+                    <label for="">Price:</label>
+                    <input type="text" name="price" placeholder="0" required="required" size="10"/> $<br><br>
+                    <label for="">Quantity:</label>
+                    <input type="number" name="quantity" value="0" min="0" size="5">
+                    <br><br>
+                    <button type="submit" class="btn btn-dark">Add Product</button>
+                </form>
+         </div>
+       </div>
+
+    </div>
+
+{% include "footer.html" %}
+
+  </div>
+
+</section>
+</body>

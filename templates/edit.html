@@ -1,0 +1,57 @@
+{% include "header.html" %}
+
+<body>
+<section>
+
+    <div class="container-xxl">
+
+     <div class="hero-unit">
+       <h1>Welcome to My Store</h1>
+     </div>
+
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+              <p class="error">{{ message }}</p><br>
+            {% endfor %}
+        {% endif %}
+        {% endwith %}
+
+     <div class="container">
+       <div class="row">
+         <div class="col">
+           <img src="{{ product.img }}" style="max-width: 560px"><br><br
+             <label for="">Upload new thumbnail:</label><br><br>
+             <input form="editform" type="file" name="img" size="5" accept=".jpg, .jpeg, .png"/><br><br>
+         </div>
+         <div class="col">
+        <div class="row product-description">
+                <br>
+                <form id="editform" action="{{ url_for('edit_product', id=product.id) }}" method="POST" enctype="multipart/form-data">
+                    <label for="">Title:</label><br>
+                    <textarea hidden></textarea>
+                    <textarea name="name" cols="80" rows="2">{{product.name}}</textarea><br><br>
+                    <label for="">Description:</label><br>
+                    <textarea name="description" cols="80" rows="10">{{product.description}}</textarea><br><br>
+                    <label for="">ID:</label>&nbsp;
+                    <input type="text" name="pid" value="{{product.pid}}" min="0"><br><br>
+                    <label for="">Price:</label>
+                    <input type="text" name="price" placeholder={{product.price}} value={{product.price}} required="required" size="10"/> $<br><br>
+                    <label for="">Quantity:</label>
+                    <input type="number" name="quantity" value="{{product.stock}}" min="0" size="5"> &nbsp;
+                    <input type="hidden" name="product_id" value="{{product.id}}">
+                    <br><br>
+                    <button type="submit" class="btn btn-dark">Update</button>
+
+                </form>
+         </div>
+       </div>
+
+    </div>
+
+{% include "footer.html" %}
+
+  </div>
+
+</section>
+</body>
