@@ -1,6 +1,9 @@
 import json
 import os
 import secrets
+import stripe
+import b2sdk.v2 as b2
+
 from datetime import datetime, timedelta
 from flask import Flask, render_template, redirect, url_for, request, session, flash, abort, current_app
 from flask_bootstrap import Bootstrap
@@ -15,8 +18,7 @@ from werkzeug.utils import secure_filename
 from flask_login import UserMixin, login_user, LoginManager, login_required, current_user, logout_user
 from flask_uploads import IMAGES, UploadSet, configure_uploads
 from functools import wraps
-import stripe
-import b2sdk.v2 as b2
+
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 app = Flask(__name__)
